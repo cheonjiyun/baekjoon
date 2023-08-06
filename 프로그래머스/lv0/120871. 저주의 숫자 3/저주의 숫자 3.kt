@@ -4,8 +4,7 @@ class Solution {
         
         
         for(i in 1..answer){
-            if(i.toString().contains('3')) answer += 1
-            else if(i % 3 == 0) answer += 1
+            if(i % 3 == 0 || i.toString().contains('3')) answer += 1            
         }
         return answer
     }
