@@ -1,19 +1,23 @@
-function solution(l, r) {
-    var answer = [];
+function solution(l, r) {  
+    let answer = [];
     
-    for(let i = l; i <= r; i++){
-        const numArr = [1, 2, 3, 4, 6, 7, 8, 9]; // 5, 0 뺀 숫자
-        
-        // 5와 0이 아닌 숫자가 들어가 있다면 false가 될 것
-        let flag = true 
-        numArr.forEach(num => {
-            if(`${i}`.includes(num)) flag = false
-        })
-        
-        // 검사 후에도 여전히 flag가 true라면 배열에 넣기
-        if(flag) answer.push(i)        
+    /* 2진수는 0과 1로 이루어져있으니 5을 곱하면 0과 5가 된다는 점을 이용한다.
+    
+       2진수인데, 0와 5로 이루어진 2진수라고 치자    
+    
+       1,000,000이가 2진수라면 64이다. 그러므로 64까지 반복분을 돌면서 2진수를 생성하면 7자리 2진수를 만들 수 있다.
+       그 후 5를 곱하면 최대 5,000,000인 2진수가 생성된다.       
+    */    
+    for(let i = 0; i <= 64; i++){
+        answer.push(i.toString(2) * 5)
     }
     
-    // 빈배열이면 -1 넣어주기
-    return answer.length === 0 ? [-1] : answer;
+    /* 65개인 이진수를 루트 돌면서 l, r 범위에 있는 숫자만 남겨둠*/
+    answer = answer.filter(el => el >= l && el <= r);
+    
+    // 배열에 아무것도 없으면 -1 반환
+    return answer.length === 0 ? [-1] : answer
+    
+    
+    // 시간복잡도가 1000000보다는 64 * 2가 짧다.
 }
