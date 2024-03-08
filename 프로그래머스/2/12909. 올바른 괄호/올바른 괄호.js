@@ -1,15 +1,13 @@
 function solution(s){
-
-    let open = [];
-    let close = [];
+    let openStack = [];
     
     for(let i = 0; i< s.length; i++){
         if(s[i] == '('){
-            open.push('(')
+            openStack.push('(')
         }else{
-            if(!open.pop()) return false
+            if(!openStack.pop()) return false
         } 
     }
     
-    return !open.length
+    return !openStack.length
 }
