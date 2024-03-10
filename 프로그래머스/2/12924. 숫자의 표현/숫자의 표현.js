@@ -1,8 +1,19 @@
 function solution(n) {   
-    let answer = 0;
-    for(let i = 1; i <= n; i++){
-        if(n % i == 0 && i % 2 == 1) answer++
+    let count = 0;
+    
+    let start = 1;
+    let end = 1;
+    while(end <= n){
+        let sum = (start + end) / 2 * (end - start + 1)
+        if(sum == n){
+            count++
+            end++;
+        }else if(sum < n){
+            end++;
+        }else{
+            start++
+        }
     }
     
-    return answer
+    return count
 }
