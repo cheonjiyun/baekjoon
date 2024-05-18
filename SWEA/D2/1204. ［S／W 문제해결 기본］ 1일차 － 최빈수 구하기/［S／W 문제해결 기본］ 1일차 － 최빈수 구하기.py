@@ -1,0 +1,20 @@
+T = int(input())
+# 여러개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
+for test_case in range(1, T + 1):
+    n = int(input())
+    arr = list(map(int, input().split()))
+
+    dic = {}
+    for x in arr:
+        if x in dic:
+            dic[x] += 1
+        else:
+            dic[x] = 1
+
+    frequency = 0
+    num = 0
+    for x in dic.keys():
+        if dic[x] > frequency or (dic[x] == frequency and x > num):
+            frequency = dic[x]
+            num = x
+    print(f"#{test_case} {num}")
