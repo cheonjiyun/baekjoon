@@ -3,23 +3,37 @@ T = int(input())
 for test_case in range(1, T + 1):
     stringList = list(input())
 
-    for _ in range(len(stringList)):
-        print("..#.", end='')
-    print(".")
+    # for _ in range(len(stringList)):
+    #     print("..#.", end='')
+    # print(".")
+    #
+    # for _ in range(len(stringList)):
+    #     print('.#.#',end='')
+    # print(".")
+    #
+    # string = ".#.".join(stringList)
+    # print(f"#.{string}.#")
+    #
+    #
+    # for _ in range(len(stringList)):
+    #     print('.#.#',end='')
+    # print(".")
+    #
+    #
+    # for _ in range(len(stringList)):
+    #     print("..#.", end='')
+    # print(".")
 
-    for _ in range(len(stringList)):
-        print('.#.#',end='')
-    print(".")
+    outer = "..#."*len(stringList)
+    outer += "."
+    inner = ".#.#"*len(stringList)
+    inner += "."
+    string = "#."
+    string += ".#.".join(stringList)
+    string += ".#"
 
-    string = ".#.".join(stringList)
-    print(f"#.{string}.#")
-
-
-    for _ in range(len(stringList)):
-        print('.#.#',end='')
-    print(".")
-
-
-    for _ in range(len(stringList)):
-        print("..#.", end='')
-    print(".")
+    print(outer)
+    print(inner)
+    print(string)
+    print(inner)
+    print(outer)
