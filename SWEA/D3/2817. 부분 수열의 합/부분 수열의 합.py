@@ -1,25 +1,26 @@
-def dfs(arr, i, n, k, number):
-    if number == k:
-        return 1
-    if number > k:
-        return 0
-
-    result = 0
-    for j in range(i+1, n):
-        result += dfs(arr, j, n, k, number + arr[j])
-
-    return result
-
 T = int(input())
 # 여러개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
 for test_case in range(1, T + 1):
     n, k = map(int, input().split())
     arr = list(map(int, input().split()))
 
-    arr.sort()
+    answer =0
+    for i in range(0, 1 << n): # 2^n
+        # print("i::", bin(i))
+        sumNumber = 0
+        for j in range(n): # n
+            # print('j', j)
+            #
+            # print('왼', bin(i))
+            # print('오', bin(1 << j))
+            # print('&', bin(i & (1 << j)))
+            # print(int(i & (1 << j)))
+            if i & (1 << j):
+                # print('if문 통과')
+                sumNumber += arr[j]
 
-    answer = 0
-    for i in range(n):
-        answer += dfs(arr, i, n, k, arr[i])
+            # print()
+        if sumNumber == k:
+            answer += 1
 
     print(f"#{test_case} {answer}")
