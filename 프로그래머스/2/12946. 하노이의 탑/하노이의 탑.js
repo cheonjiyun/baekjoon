@@ -1,17 +1,17 @@
 
 function dfs(n, k, start, dest){
-    if(k == 0) return []
+    if(n < k) return []
     
     const result = []
     
     const abc = [1,2,3]
     
     // n-1 왼
-    result.push(...dfs(n, k-1, start, abc.find((el) => el != start && el != dest)))
+    result.push(...dfs(n, k+1, start, abc.find((el) => el != start && el != dest)))
     // n
     result.push([start, dest])
     // n-1 오
-    result.push(...dfs(n, k-1, abc.find((el) => el != start && el != dest), dest))
+    result.push(...dfs(n, k+1, abc.find((el) => el != start && el != dest), dest))
     
 //     if(n<=1){
 //         return [[start, start+2]]
@@ -54,5 +54,5 @@ function dfs(n, k, start, dest){
 function solution(n) {
     var answer = [[]];
     
-    return dfs(n, n, 1, 3);
+    return dfs(n, 1, 1, 3);
 }
