@@ -1,5 +1,5 @@
 
-function dfs(n, k, start, dest){
+function dfs(n, k, start, dest, tmp){
     if(n < k) return []
     
     const result = []
@@ -7,11 +7,11 @@ function dfs(n, k, start, dest){
     const abc = [1,2,3]
     
     // n-1 왼
-    result.push(...dfs(n, k+1, start, abc.find((el) => el != start && el != dest)))
+    result.push(...dfs(n, k+1, start, tmp, dest))
     // n
     result.push([start, dest])
     // n-1 오
-    result.push(...dfs(n, k+1, abc.find((el) => el != start && el != dest), dest))
+    result.push(...dfs(n, k+1, tmp, dest, start))
     
 //     if(n<=1){
 //         return [[start, start+2]]
@@ -54,5 +54,5 @@ function dfs(n, k, start, dest){
 function solution(n) {
     var answer = [[]];
     
-    return dfs(n, 1, 1, 3);
+    return dfs(n, 1, 1, 3, 2);
 }
