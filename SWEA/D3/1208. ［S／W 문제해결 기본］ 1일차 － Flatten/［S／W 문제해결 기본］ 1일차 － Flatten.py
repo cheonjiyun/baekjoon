@@ -37,8 +37,12 @@ public class Solution {
         int maxIndex = getMaxIndex(width);
         int minIndex = getMinIndex(width);
 
+        if (width[maxIndex] - width[minIndex] <= 1)
+          break;
+
         width[minIndex] += 1;
         width[maxIndex] -= 1;
+
       }
 
       /*
