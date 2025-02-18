@@ -1,38 +1,81 @@
-# 여러개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
-for _ in range(10):
-    test_case = int(input())
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-    arr = [list(map(int, input().split())) for _ in range(100)]
+public class Solution {
+  public static void main(String[] args) throws Exception {
 
-    maxValue = 0
+    /**
+     * 0. 입력파일 읽어들이기
+     */
+    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-    # 가로
-    for row in arr:
-        sumValue = sum(row)
-        if sumValue > maxValue:
-            maxValue = sumValue
+    // 결과를 한 번에 출력하기 위한 StringBuilder
+    StringBuilder sb = new StringBuilder();
 
-    # 세로
-    for x in range(100):
-        sumValue = 0
-        for y in range(100):
-            sumValue += arr[y][x]
-        if sumValue > maxValue:
-            maxValue = sumValue
+    for (int test_case = 1; test_case <= 10; test_case++) {
+      sb.append("#" + test_case + " ");
 
-    # 대각선 좌상 -> 우하
-    sumValue = 0
-    for i in range(100):
-        sumValue += arr[i][i]
-    if sumValue > maxValue:
-        maxValue = sumValue
+      int T = Integer.parseInt(in.readLine());
+      // 여러분의 알고리즘 코드 작성하기
 
-    # 개각선 우상 -> 좌하
-    sumValue = 0
-    for y in range(100):
-        for x in range(99, -1, -1):
-            arr[y][x]
-    if sumValue > maxValue:
-        maxValue = sumValue
+      /*
+       * 1. 입력 파일 객체화
+       */
 
-    print(f"#{test_case} {maxValue}")
+      int[][] arr = new int[100][100];
+      for (int i = 0; i < 100; i++) {
+        String[] inputs = in.readLine().split(" ");
+        for (int j = 0; j < 100; j++) {
+          arr[i][j] = Integer.parseInt(inputs[j]);
+        }
+      }
+
+      /*
+       * 2. 알고리즘 풀기
+       */
+
+      int result = 0;
+
+      // 가로
+      for (int y = 0; y < 100; y++) {
+        int sumRow = 0;
+        for (int x = 0; x < 100; x++) {
+          sumRow += arr[y][x];
+        }
+        result = Math.max(sumRow, result);
+      }
+
+      // 세로
+      for (int x = 0; x < 100; x++) {
+        int sumRow = 0;
+        for (int y = 0; y < 100; y++) {
+          sumRow += arr[y][x];
+        }
+        result = Math.max(sumRow, result);
+      }
+
+      // 대각선 좌상 우하
+      int sumRow = 0;
+      for (int y = 0; y < 100; y++) {
+        sumRow += arr[y][y];
+      }
+      result = Math.max(sumRow, result);
+
+      // 대각선 우상 좌하
+      sumRow = 0;
+      for (int y = 0; y < 100; y++) {
+        sumRow += arr[y][99 - y];
+      }
+
+      result = Math.max(sumRow, result);
+
+
+      /*
+       * 정답 출력
+       */
+      sb.append(result).append("\n");
+    }
+
+    System.out.println(sb);
+  }
+}
