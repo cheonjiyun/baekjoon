@@ -1,17 +1,41 @@
-# 여러개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
-for test_case in range(1, 11):
-    n, password = input().split()
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-    while 1:
-        end = True
-        # 겹치는 문자가 있다면
-        for i in range(len(password) - 1):
-            if password[i] == password[i+1]:
-                password = password[:i] + password[i+2:]
-                end = False # 있다.
-                break # 다시 처음부터 돈다
-        if end: #없다
-            break
+public class Solution {
+  public static void main(String[] args) throws Exception {
 
-    print(f"#{test_case} {password}")
+    /**
+     * 0. 입력파일 읽어들이기
+     */
+    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
+    // 결과를 한 번에 출력하기 위한 StringBuilder
+    StringBuilder sb = new StringBuilder();
+
+    for (int test_case = 1; test_case <= 10; test_case++) {
+      sb.append("#" + test_case + " ");
+
+      String[] input = in.readLine().split(" ");
+      Deque<Character> stack = new ArrayDeque<Character>();
+      int n = Integer.parseInt(input[0]);
+      for (char c : input[1].toCharArray()) {
+
+        if (!stack.isEmpty() && stack.peekLast() == c) {
+          stack.removeLast();
+        } else {
+          stack.addLast(c);
+        }
+      }
+
+      for (char c : stack) {
+        sb.append(c);
+      }
+      sb.append("\n");
+    }
+
+    System.out.println(sb);
+  }
+}
