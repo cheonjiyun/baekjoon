@@ -1,21 +1,50 @@
-# 여러개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
-for _ in range(1, 11):
-    test_cast = int(input())
-    numbers = list(map(int, input().split()))
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
-    while numbers[7] > 0: # 마지막이 0이 아닐동안 계속 루프
-        for i in range(1, 6): # 1~5까지
-            minusNumber = numbers[0] - i # 맨 앞에 숫자를 i만큼 뺀다.
-            if minusNumber <= 0: # 0미만라면 0으로 바꾸어준다.
-                minusNumber = 0
+public class Solution {
+	public static void main(String[] args) throws Exception {
 
-            # 배열 재생성: 맨 앞에 빼고 잘라낸다음, 다시 맨 뒤로 넣어준다.
-            numbers = numbers[1:8]
-            numbers.append(minusNumber)
+//		System.setIn(new FileInputStream("테스트케이스.txt"));
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-            # 만약 0이었으면 증가하는 행동을 그만둔다.
-            if minusNumber == 0:
-                break
+		for (int test_case = 1; test_case <= 10; test_case++) {
+			int T = Integer.parseInt(in.readLine());
+			sb.append("#" + test_case + " ");
 
-    result = " ".join(map(str, numbers)) # 숫자 리스트를 문자열로 바꾼뒤 join한다.
-    print(f"#{test_cast} {result}")
+			String[] input = in.readLine().split(" ");
+//			int[] arr = new int[8];
+			Queue<Integer> q = new ArrayDeque<>();
+			for (int i = 0; i < 8; i++) {
+				q.offer(Integer.parseInt(input[i]));
+			}
+
+			boolean can = true;
+			while (can) {
+				for (int minus = 1; minus <= 5; minus++) {
+					int cur = q.poll();
+
+					int num = cur - minus < 0 ? 0 : cur - minus;
+					q.offer(num);
+
+					// 0보다 작아지면
+					if (num <= 0) {
+						can = false;
+						break;
+					}
+
+				}
+
+			}
+
+			for (int i : q) {
+				sb.append(i).append(" ");
+			}
+			sb.append("\n");
+		}
+
+		System.out.println(sb);
+	}
+}
