@@ -1,104 +1,100 @@
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-class Solution {
+public class Solution {
+  public static void main(String[] args) throws Exception {
 
-  static List<Integer>[] edges;
-  static int a;
-  static int b;
-  // 결과를 전역으로 저장
-  static int resultMinSize;
-  static int resultNode;
+    // System.setIn(new FileInputStream("테스트케이스.txt"));
+    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    StringBuilder sb = new StringBuilder();
 
-  public static void main(String args[]) throws Exception {
-
-    Scanner sc = new Scanner(System.in);
     int T;
-    T = Integer.valueOf(sc.nextLine());
+    T = Integer.parseInt(in.readLine());
+    for (int test_case = 1; test_case <= 10; test_case++) {
+      sb.append("#" + test_case + " ");
 
-    for (int test_case = 1; test_case <= T; test_case++) {
 
-      // 초기화
-      resultMinSize = 0;
-      resultNode = 0;
+      String[] input1 = in.readLine().split(" ");
+      int v = Integer.parseInt(input1[0]);
+      int e = Integer.parseInt(input1[1]);
+      int a = Integer.parseInt(input1[2]);
+      int b = Integer.parseInt(input1[3]);
 
-      // 입력
-      String[] input = sc.nextLine().split(" ");
-      int v = Integer.valueOf(input[0]);
-      int e = Integer.valueOf(input[1]);
-      a = Integer.valueOf(input[2]);
-      b = Integer.valueOf(input[3]);
+      String[] input2 = in.readLine().split(" ");
 
-      edges = new ArrayList[v + 1];
-      for (int i = 0; i < v + 1; i++) {
-        edges[i] = new ArrayList<>();
+      List<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
+      for (int i = 0; i <= v; i++) {
+        list.add(new ArrayList<>());
       }
 
-      String[] inputEdge = sc.nextLine().split(" ");
-      for (int i = 0; i < inputEdge.length; i += 2) {
-        int parent = Integer.valueOf(inputEdge[i]);
-        int child = Integer.valueOf(inputEdge[i + 1]);
+      for (int i = 0; i < e * 2; i += 2) {
+        int p = Integer.parseInt(input2[i]);
+        int c = Integer.parseInt(input2[i + 1]);
 
-        edges[parent].add(child);
+        list.get(p).add(c);
       }
 
-      ReturnType result = findChildAndSize(1);
+      Node result = dfs(1, list, a, b);
+      sb.append(result.number).append(" ").append(result.findCount).append("\n");
 
-      System.out.printf("#%d %d %d\n", test_case, resultNode, resultMinSize);
     }
+
+    System.out.println(sb);
   }
 
-  // 노드 돌면서 -> 본인과 자식 합쳐서 사이즈, 본인과 자식 합쳐서 a가 있는지, b가 있는지
-  static class ReturnType {
-    int size;
-    boolean hasA;
-    boolean hasB;
+  private static Node dfs(int i, List<ArrayList<Integer>> list, int a, int b) {
+    Node node = new Node(false, 0, 1);
 
-    public ReturnType(int size, boolean hasA, boolean hasB) {
+    for (int child : list.get(i)) {
+      Node childReturn = dfs(child, list, a, b);
+
+      node.isChild += childReturn.isChild;
+      node.sub += childReturn.sub;
+      if (childReturn.find) {
+        node.find = true;
+        node.number = childReturn.number;
+        node.findCount = childReturn.findCount;
+      }
+    }
+
+    if (i == a || i == b) {
+      node.isChild += 1; // 내가
+    }
+
+    if (!node.find && node.isChild == 2) {
+      node.find = true;
+      // 만약 두개면 그게 조상
+      node.number = i;
+      node.findCount = node.sub;
+    }
+
+
+    return node;
+  }
+
+  static class Node {
+    int number;
+    boolean find;
+    int findCount;
+    int isChild;
+    int sub;
+
+    public Node(boolean find, int isChild, int sub) {
       super();
-      this.size = size;
-      this.hasA = hasA;
-      this.hasB = hasB;
+      this.find = find; // 그만
+      this.isChild = isChild;
+      this.sub = sub;
     }
 
     @Override
     public String toString() {
-      return "ReturnType [size=" + size + ", hasA=" + hasA + ", hasB=" + hasB + "]";
-    }
-  }
-
-  public static ReturnType findChildAndSize(int start) {
-
-    ReturnType result = new ReturnType(1, false, false);
-
-    // 자식들
-    for (int child : edges[start]) {
-      ReturnType childResult = findChildAndSize(child);
-      result.size += childResult.size;
-      if (childResult.hasA) {
-        result.hasA = true;
-      }
-      if (childResult.hasB) {
-        result.hasB = true;
-      }
+      return "Node [number=" + number + ", find=" + find + ", findCount=" + findCount + ", isChild="
+          + isChild + ", sub=" + sub + "]";
     }
 
-    // 나
-    if (start == a) {
-      result.hasA = true;
-    }
-    if (start == b) {
-      result.hasB = true;
-    }
 
-    // 결과
-    if (result.hasA && result.hasB && resultMinSize == 0) {
-      resultMinSize = result.size;
-      resultNode = start;
-    }
 
-    return result;
   }
 }
