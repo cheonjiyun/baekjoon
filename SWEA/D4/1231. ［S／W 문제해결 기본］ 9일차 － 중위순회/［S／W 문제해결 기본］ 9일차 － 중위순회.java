@@ -1,52 +1,46 @@
-import java.io.FileInputStream;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-class Solution {
+public class Solution {
+  public static void main(String[] args) throws Exception {
 
-
-  static String resultWord = "";
-  static String[] infos;
-  static int[][] children;
-
-  public static void main(String args[]) throws Exception {
-
-    Scanner sc = new Scanner(System.in);
+    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    StringBuilder sb = new StringBuilder();
 
     for (int test_case = 1; test_case <= 10; test_case++) {
-      // -- 초기화
-      resultWord = "";
+      sb.append("#").append(test_case).append(" ");
 
-      // -- 입력시작
-      int n = Integer.valueOf(sc.nextLine());
+      int n = Integer.parseInt(in.readLine());
+      int result = 1;
 
-      infos = new String[n + 1];
-      children = new int[n + 1][2];
+      String[] arr = new String[n + 1];
       for (int i = 1; i <= n; i++) {
-        String[] inputs = sc.nextLine().split(" ");
-        int number = Integer.valueOf(inputs[0]);
-        infos[i] = inputs[1];
+        String[] input = in.readLine().split(" ");
 
-        if (inputs.length >= 3) {
-          children[i][0] = Integer.valueOf(inputs[2]);
-        }
-        if (inputs.length >= 4) {
-          children[i][1] = Integer.valueOf(inputs[3]);
-        }
+        String a = input[1];
+        arr[i] = a;
       }
-      // -- 입력 끝 --
-      readbfs(1);
-      System.out.printf("#%d %s\n", test_case, resultWord);
+
+      inOrder(1, arr, sb);
+      sb.append("\n");
+
     }
+
+    System.out.println(sb);
   }
 
-  public static void readbfs(int nodeNumber) {
+  private static void inOrder(int i, String[] arr, StringBuilder sb) {
 
-    if (children[nodeNumber][0] != 0) {
-      readbfs(children[nodeNumber][0]);
-    }
-    resultWord += infos[nodeNumber];
-    if (children[nodeNumber][1] != 0) {
-      readbfs(children[nodeNumber][1]);
-    }
+    if (i >= arr.length)
+      return;
+
+    inOrder(i * 2, arr, sb);
+
+    sb.append(arr[i]);
+
+    inOrder(i * 2 + 1, arr, sb);
+
   }
+
+
 }
