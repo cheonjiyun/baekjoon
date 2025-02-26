@@ -1,109 +1,149 @@
-import java.util.ArrayDeque;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
+	static List<ArrayList<Integer>> adjacency;
+	static int[] population;
+	static int result;
 
-  static int[] areas;
-  static int n;
-  static int[] population;
-  static List<Integer>[] connect;
+	public static void main(String[] args) throws Exception {
+		result = -1;
 
-  static boolean[] visited;
+		// System.setIn(new FileInputStream("테스트케이스.txt"));
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine().trim());
 
-  static int result = Integer.MAX_VALUE;
+		int n = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine().trim());
+		population = new int[n + 1];
+		for (int i = 0; i < n; i++) {
+			population[i + 1] = Integer.parseInt(st.nextToken());
+		}
 
-  public static void main(String[] args) throws Exception {
+		adjacency = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i <= n; i++) {
+			adjacency.add(new ArrayList<>());
+		}
 
-    Scanner sc = new Scanner(System.in);
+		for (int i = 1; i <= n; i++) {
+			st = new StringTokenizer(br.readLine().trim());
+			int m = Integer.parseInt(st.nextToken());
+			for (int j = 0; j < m; j++) {
+				adjacency.get(i).add(Integer.parseInt(st.nextToken()));
+			}
+		}
 
-    n = sc.nextInt();
+		// 둘 중 하나 선택해햐 함
+		// 선거구끼리는 연결되어있어야 함
+		// 두 선거구는 연결되어있음
 
-    population = new int[n + 1];
-    connect = new ArrayList[n + 1];
+		// 1. 둘 중 하나로 일단 선택해 2*n
+		bitmasking(n);
+		// 2. 서로소 집합으로 구역 나누기
 
-    for (int i = 1; i <= n; i++) {
-      population[i] = sc.nextInt();
-    }
+		// 3. 두개로 나뉘는지 확인
 
-    for (int i = 1; i <= n; i++) {
-      connect[i] = new ArrayList<>();
-      int nextn = sc.nextInt();
-      for (int j = 1; j <= nextn; j++) {
-        connect[i].add(sc.nextInt());
-      }
-    }
+		// 4. 차이가 최소 인 값 확인
 
-    areas = new int[n + 1];
-    dfs(1);
+		sb.append(result);
 
-    if (result == Integer.MAX_VALUE)
-      System.out.println(-1);
-    else
-      System.out.println(result);
-  }
+		System.out.println(sb);
+	}
 
-  static void dfs(int areaIdx) {
+	static int[] district;
+	static int[] parents;
 
-    if (areaIdx == n + 1) {
-      // 선거구 2개인지
-      int electionSum = 0;
+	static void makeSet(int n) {
+		for (int i = 1; i <= n; i++) {
+			parents[i] = i;
+		}
+	}
 
-      // 같은 선거구 다 방문처리
-      visited = new boolean[n + 1];
-      for (int i = 1; i <= n; i++) {
-        if (!visited[i]) {
-          bfs(i, areas[i]);
-          electionSum++;
-        }
-      }
+	// 비트마스킹으로 모든 경우 해본다.
+	static void bitmasking(int n) {
 
-      // 구역이 딱 2개 나오면
-      if (electionSum == 2) {
-        // 구역별로 인구를 센다.
-        int areaPopulation1 = 0;
-        int areaPopulation2 = 0;
-        for (int i = 1; i <= n; i++) {
-          if (areas[i] == 1)
-            areaPopulation1 += population[i];
-          else
-            areaPopulation2 += population[i];
-        }
+		district = new int[n + 1];
+		parents = new int[n + 1];
+		for (int i = 0; i < Math.pow(2, n); i++) {
+			Arrays.fill(district, 0);
+			makeSet(n);
 
-        result = Math.min(result, Math.abs(areaPopulation1 - areaPopulation2));
-      }
-      return;
-    }
+			int number = i;
+
+			for (int j = 0; j < n; j++) {
+				int bit = 1 << j;
+				if ((number & bit) != 0) { // on 되어있는 곳에
+					district[n - j] = 1;
+				}
+			}
+			// 선택 끝
+//			System.out.println(Arrays.toString(district));
+
+			// 2. 서로소 집합으로 구역 나누기
+			div(district, n);
+//			System.out.println("parents : " + Arrays.toString(parents));
+
+			// 3. 두개로 나뉘는지 확인
+			HashSet<Integer> count = new HashSet<>();
+			for (int ad = 1; ad <= n; ad++) {
+				count.add(findSet(ad));
+			}
+
+//			System.out.println("count : " + count);
+			// 4. 차이가 최소 인 값 확인
+			int[] populationSum = new int[2];
+			if (count.size() == 2) {
+				for (int ad = 1; ad <= n; ad++) {
+					populationSum[district[ad]] += population[ad];
+				}				
+
+				int dist = Math.abs(populationSum[0] - populationSum[1]);
+//				System.out.println("dist : " + dist);
+				
+				if(result == -1) {
+					result = dist;
+				}else {
+					result = Math.min(result, dist);					
+				}
+			}
 
 
-    areas[areaIdx] = 1;
-    dfs(areaIdx + 1);
+		}
+	}
 
-    areas[areaIdx] = 2;
-    dfs(areaIdx + 1);
-  }
+	private static void div(int[] district, int n) {
+		for (int i = 1; i <= n; i++) {
+			for (int adj : adjacency.get(i)) {
+				if (district[i] == district[adj]) { // 구역이 같다면
+					union(i, adj);
+				}
+			}
+		}
+	}
 
+	private static boolean union(int a, int b) {
+		int aRoot = findSet(a);
+		int bRoot = findSet(b);
 
-  static void bfs(int areaIdx, int areaNum) {
-    // 같은 선거구 다 방문처리
+		if (aRoot == bRoot) {
+			return false;
+		}
 
-    // 지역
-    visited[areaIdx] = true;
+		parents[bRoot] = aRoot;
+		return true;
+	}
 
-    Queue<Integer> q = new ArrayDeque<>();
-    q.add(areaIdx);
-
-    while (!q.isEmpty()) {
-      int current = q.poll();
-      for (int next : connect[current]) {
-        if (!visited[next] && areas[next] == areaNum) {
-          visited[next] = true;
-          q.add(next);
-        }
-      }
-    }
-  }
+	private static int findSet(int a) {
+		if (parents[a] == a) {
+			return a;
+		}
+		return parents[a] = findSet(parents[a]);
+	}
 }
