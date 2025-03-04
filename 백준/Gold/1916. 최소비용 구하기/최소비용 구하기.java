@@ -1,85 +1,99 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
-// 백준알고리즘 1916번 최소비용 구하기
-
 public class Main {
-    static int N, M;
-    static int start, end;
-    static ArrayList<Node>[] graph;
+  static int n;
+  static List<ArrayList<Node>> adjList;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
-        M = Integer.parseInt(br.readLine());
+  public static void main(String[] args) throws Exception {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringBuilder sb = new StringBuilder();
 
-        graph = new ArrayList[N + 1];
-        for (int i = 0; i <= N; i++) graph[i] = new ArrayList<>();
+    StringTokenizer st = new StringTokenizer(br.readLine().trim());
+    n = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < M; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int v = Integer.parseInt(st.nextToken());
-            int w = Integer.parseInt(st.nextToken());
-            int cost = Integer.parseInt(st.nextToken());
+    st = new StringTokenizer(br.readLine().trim());
+    int m = Integer.parseInt(st.nextToken());
 
-            graph[v].add(new Node(w, cost));
-        }
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        start = Integer.parseInt(st.nextToken());
-        end = Integer.parseInt(st.nextToken());
-
-        Dijkstra();
+    adjList = new ArrayList<ArrayList<Node>>();
+    for (int i = 0; i <= n; i++) {
+      adjList.add(new ArrayList<>());
     }
 
-    public static void Dijkstra() {
-        boolean[] check = new boolean[N + 1];
-        int[] dist = new int[N + 1];
-        int INF = Integer.MAX_VALUE;
+    for (int i = 0; i < m; i++) {
+      st = new StringTokenizer(br.readLine().trim());
+      int start = Integer.parseInt(st.nextToken());
+      int end = Integer.parseInt(st.nextToken());
+      int cost = Integer.parseInt(st.nextToken());
 
-        Arrays.fill(dist, INF);
-        dist[start] = 0;
-
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.offer(new Node(start, 0));
-
-        while (!pq.isEmpty()) {
-            int nowVertex = pq.poll().index;
-
-            if (check[nowVertex]) continue;
-            check[nowVertex] = true;
-
-            //index의 연결된 정점 비교
-            for (Node next : graph[nowVertex]) {
-                if (dist[next.index] > dist[nowVertex] + next.cost) {
-                    dist[next.index] = dist[nowVertex] + next.cost;
-
-                    pq.offer(new Node(next.index, dist[next.index]));
-                }
-            }
-        }
-
-        System.out.print(dist[end]);
-
+      adjList.get(start).add(new Node(end, cost));
     }
-}
 
-class Node implements Comparable<Node> {
-    int index;
+    st = new StringTokenizer(br.readLine().trim());
+    int start = Integer.parseInt(st.nextToken());
+    int end = Integer.parseInt(st.nextToken());
+
+    sb.append(dijstra(start, end));
+    System.out.println(sb);
+  }
+
+  static int dijstra(int start, int end) {
+
+    Queue<Node> pq = new PriorityQueue<Node>();
+    pq.offer(new Node(start, 0));
+
+    boolean[] visited = new boolean[n + 1];
+
+    int[] dist = new int[n + 1];
+    Arrays.fill(dist, 1000000000);
+    dist[start] = 0;
+
+    while (!pq.isEmpty()) {
+      Node cur = pq.poll();
+
+      if (visited[cur.end])
+        continue;
+      visited[cur.end] = true;
+
+      for (Node adjNode : adjList.get(cur.end)) {
+        if (!visited[adjNode.end] && dist[adjNode.end] > dist[cur.end] + adjNode.cost) {
+          dist[adjNode.end] = dist[cur.end] + adjNode.cost;
+
+          pq.offer(new Node(adjNode.end, dist[adjNode.end]));
+        }
+      }
+    }
+
+    return dist[end];
+
+  }
+
+  static class Node implements Comparable<Node> {
+    int end;
     int cost;
 
-    public Node(int index, int cost) {
-        this.index = index;
-        this.cost = cost;
+    public Node(int end, int cost) {
+      super();
+      this.end = end;
+      this.cost = cost;
     }
 
     @Override
     public int compareTo(Node o) {
-        return Integer.compare(this.cost, o.cost);
+      return this.cost - o.cost;
     }
+
+    @Override
+    public String toString() {
+      return "Node [end=" + end + ", cost=" + cost + "]";
+    }
+
+
+  }
 }
