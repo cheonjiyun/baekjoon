@@ -1,83 +1,78 @@
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
-  static int r;
+  static int[] dCol = {1, 1, 1};
+  static int[] dRow = {-1, 0, 1};
+  static char[][] ground;
+
   static int c;
-  static String[][] ground;
-  static String PIPE = "P";
+  static int r;
 
-  public static boolean dfs(int x, int y) {
-    if (x == c - 1) {
-      return true;
-    }
-
-    int nx = x + 1;
-    for (int ny = y - 1; ny <= y + 1; ny++) {
-      // 오른쪽 위 대각선, 오른쪽, 오른쪽 아래 대각선
-      if (ny < 0 || ny >= r)
-        continue; // 벗어남
-      if (ground[ny][nx].equals("x"))
-        continue; // 벽
-      if (ground[ny][nx].equals(PIPE))
-        continue; // 파이프
-
-      ground[ny][nx] = PIPE;
-      if (dfs(nx, ny))
-        return true;
-      // ground[ny][nx] = ".";
-    }
-    return false;
-  }
+  static int result = 0;
 
   public static void main(String[] args) throws Exception {
 
-    /*
-     * 0. 입력파일 읽어들이기
-     */
-    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-    // 결과를 한 번에 출력하기 위한 StringBuilder
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringBuilder sb = new StringBuilder();
 
-    // 여러분의 알고리즘 코드 작성하기
+    StringTokenizer st = new StringTokenizer(br.readLine().trim());
+    r = Integer.parseInt(st.nextToken());
+    c = Integer.parseInt(st.nextToken());
 
-    /*
-     * 1. 입력 파일 객체화
-     */
-
-    String[] inputs = in.readLine().split(" ");
-    r = Integer.parseInt(inputs[0]);
-    c = Integer.parseInt(inputs[1]);
-
-    ground = new String[r][c];
+    ground = new char[r][c];
     for (int i = 0; i < r; i++) {
-      String[] input = in.readLine().split("");
+      st = new StringTokenizer(br.readLine().trim());
+      char[] input = st.nextToken().toCharArray();
       for (int j = 0; j < c; j++) {
         ground[i][j] = input[j];
       }
-    }
 
-    /*
-     * 2. 알고리즘 풀기
-     */
-
-
-    int result = 0;
-    for (int y = 0; y < r; y++) {
-      ground[y][0] = "P";
-      if (dfs(0, y))
-        result += 1;
     }
 
 
-    /*
-     * 정답 출력
-     */
+    for (int i = 0; i < r; i++) {
+      result += dfs(0, i);
+    }
 
     sb.append(result);
     System.out.println(sb);
+  }
+
+  static int dfs(int col, int row) {
+
+
+    ground[row][col] = '-';
+
+    for (int i = 0; i < 3; i++) {
+      int nCol = dCol[i] + col;
+      int nRow = dRow[i] + row;
+
+      if (nCol == c) {
+        return 1;
+      }
+
+      if (isWall(nCol, nRow))
+        continue;
+
+      if (ground[nRow][nCol] == '.') {
+        // 방문
+        if (dfs(nCol, nRow) == 1) {
+          return 1;
+        } ;
+      }
+
+    }
+    return 0;
+  }
+
+  static boolean isWall(int col, int row) {
+    if (col < 0 || row < 0 || col >= c || row >= r)
+      return true;
+    else
+      return false;
   }
 }
