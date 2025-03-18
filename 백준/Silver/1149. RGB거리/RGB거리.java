@@ -1,4 +1,5 @@
 
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
@@ -31,36 +32,50 @@ public class Main {
 		}
 
 //		dfs(0, -1, 0);
-		for (int j = 0; j < 3; j++) {
-			int r = dp(n - 1, j);
-			result = Math.min(result, r);
+//		for (int j = 0; j < 3; j++) {
+//			int r = dp(n - 1, j);
+//			result = Math.min(result, r);
+//		}
+
+		// for문
+		// 점화식 -> 이전 층 최소합 다른 색깔 + 현재 층색깔
+		for (int col = 0; col < 3; col++) {
+			memo[0][col] = rgb[0][col];
 		}
+		for (int line = 1; line < n; line++) {
+			memo[line][0] = rgb[line][0] + Math.min(memo[line - 1][1], memo[line - 1][2]);
+			memo[line][1] = rgb[line][1] + Math.min(memo[line - 1][0], memo[line - 1][2]);
+			memo[line][2] = rgb[line][2] + Math.min(memo[line - 1][0], memo[line - 1][1]);
+		}
+
+		for (int col = 0; col < 3; col++) {
+			result = Math.min(result, memo[n - 1][col]);
+		}
+
 		sb.append(result);
-
-
 		System.out.println(sb);
 	}
 
-	static int dp(int line, int col) {
-		if (memo[line][col] == 0) { // dp memo 를 아직 안했으면
-			if (line == 0) {
-				for (int j = 0; j < 3; j++) {
-					memo[line][j] = rgb[line][j];
-				}
-			} else {
-				int min = Integer.MAX_VALUE;
-				for (int j = 0; j < 3; j++) {
-					if (col == j)
-						continue;// 같은 색은 통과
-					min = Math.min(min, dp(line - 1, j) + rgb[line][col]);
-				}
-				memo[line][col] = min;
-			}
-		}
-
-		return memo[line][col];
-
-	}
+//	static int dp(int line, int col) {
+//		if (memo[line][col] == 0) { // dp memo 를 아직 안했으면
+//			if (line == 0) {
+//				for (int j = 0; j < 3; j++) {
+//					memo[line][j] = rgb[line][j];
+//				}
+//			} else {
+//				int min = Integer.MAX_VALUE;
+//				for (int j = 0; j < 3; j++) {
+//					if (col == j)
+//						continue;// 같은 색은 통과
+//					min = Math.min(min, dp(line - 1, j) + rgb[line][col]);
+//				}
+//				memo[line][col] = min;
+//			}
+//		}
+//
+//		return memo[line][col];
+//
+//	}
 
 //	static void dfs(int line, int before, int sum) {
 //		if (sum > result)
