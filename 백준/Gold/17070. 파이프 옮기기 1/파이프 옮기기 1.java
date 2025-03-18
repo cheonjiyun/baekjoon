@@ -2,6 +2,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -40,88 +41,115 @@ public class Main {
 			}
 		}
 
-		int[][] count = new int[n][n];
-		count[0][1] = 1;
+		// 각 위치에 도착했을 때 파이프가 가로, 세로, 대각선으로 올 수 있는 경우
+		int[][][] count = new int[n][n][3];
+		count[0][1][ROW] = 1;
 
-		// bfs
-		Queue<Node> q = new ArrayDeque<>();
-		q.offer(new Node(0, 1, ROW, 1));
-		boolean[][][] isVisitedDir = new boolean[n][n][3];
+		// dp
+		for (int r = 0; r < n; r++) {
+			for (int c = 2; c < n; c++) {
 
-		while (!q.isEmpty()) {
-//			System.out.println(q);
-			Node cur = q.poll();
+				if (!isOut(r, c, ROW)) {
+					count[r][c][ROW] = count[r][c - 1][ROW] + count[r][c - 1][DIA];
+				}
 
-//			if (isVisitedDir[cur.r][cur.c][cur.rowColDia]) {
-//				continue;
-//			}
+				if (!isOut(r, c, COL)) {
+					count[r][c][COL] = count[r - 1][c][COL] + count[r - 1][c][DIA];
+				}
 
-			isVisitedDir[cur.r][cur.c][cur.rowColDia] = true;
+				if (!isOut(r, c, DIA)) {
+					count[r][c][DIA] = count[r - 1][c - 1][DIA] + count[r - 1][c - 1][COL] + count[r - 1][c - 1][ROW];
+				}
 
-			for (int nextDir : direction[cur.rowColDia]) {
-				int nr = cur.r + dr[nextDir];
-				int nc = cur.c + dc[nextDir];
-
-				if (isWall(nr, nc, nextDir))
-					continue;
-
-				count[nr][nc] += 1;
-				q.offer(new Node(nr, nc, nextDir, 1));
 			}
-
-//			for (int i = 0; i < n; i++) {
-//				for (int j = 0; j < n; j++) {
-//					System.out.print(count[i][j]);
-//				}
-//				System.out.println();
-//			}
-//			System.out.println();
 		}
 
-		sb.append(count[n - 1][n - 1]);
+//		// bfs
+//		int[][] count = new int[n][n];
+//		count[0][1] = 1;
+//		Queue<Node> q = new ArrayDeque<>();
+//		q.offer(new Node(0, 1, ROW));
+//		boolean[][][] isVisitedDir = new boolean[n][n][3];
+//
+//		while (!q.isEmpty()) {
+//			Node cur = q.poll();
+//
+//			isVisitedDir[cur.r][cur.c][cur.rowColDia] = true;
+//
+//			for (int nextDir : direction[cur.rowColDia]) {
+//				int nr = cur.r + dr[nextDir];
+//				int nc = cur.c + dc[nextDir];
+//
+//				if (isWall(nr, nc, nextDir))
+//					continue;
+//
+//				count[nr][nc] += 1;
+//				q.offer(new Node(nr, nc, nextDir));
+//			}
+//		}
 
 //		for (int i = 0; i < n; i++) {
 //			for (int j = 0; j < n; j++) {
-//				System.out.print(count[i][j]);
+//				System.out.print(Arrays.toString(count[i][j]) + " ");
 //			}
 //			System.out.println();
 //		}
-//		System.out.println();
+
+		int result = 0;
+		for (int i = 0; i < count[n - 1][n - 1].length; i++) {
+			result += count[n - 1][n - 1][i];
+		}
+		sb.append(result);
 
 		System.out.println(sb);
 	}
 
-	static boolean isWall(int nr, int nc, int direction) {
-		if (nr < 0 || nc < 0 || nr >= n || nc >= n)
+	static boolean isOut(int r, int c, int direction) {
+		if (home[r][c] == WALL) {
 			return true;
-		if (direction == DIA) { // 대각선이면 4칸차지
-			if (home[nr][nc] == WALL || home[nr - 1][nc] == WALL || home[nr][nc - 1] == WALL)
-				return true;
-		} else if (direction == ROW || direction == COL) {
-			if (home[nr][nc] == WALL)
-				return true;
 		}
-
+		if (direction == DIA) {
+			if (r - 1 < 0 || c - 1 < 0 || home[r - 1][c] == WALL || home[r][c - 1] == WALL) {
+				return true;
+			}
+		}
+		if (direction == COL) {
+			if (r - 1 < 0) {
+				return true;
+			}
+		}
 		return false;
 	}
+
+//	static boolean isWall(int nr, int nc, int direction) {
+//		if (nr < 0 || nc < 0 || nr >= n || nc >= n)
+//			return true;
+//		if (direction == DIA) { // 대각선이면 4칸차지
+//			if (home[nr][nc] == WALL || home[nr - 1][nc] == WALL || home[nr][nc - 1] == WALL)
+//				return true;
+//		} else if (direction == ROW || direction == COL) {
+//			if (home[nr][nc] == WALL)
+//				return true;
+//		}
+//
+//		return false;
+//	}
 
 	static class Node {
 		int r;
 		int c;
 		int rowColDia;
-		int count;
 
-		public Node(int r, int c, int rowColDia, int count) {
+		public Node(int r, int c, int rowColDia) {
 			super();
 			this.r = r;
 			this.c = c;
 			this.rowColDia = rowColDia;
-			this.count = count;
 		}
 
 		@Override
 		public String toString() {
-			return "Node [r=" + r + ", c=" + c + ", rowColDia=" + rowColDia + ", count=" + count + "]";
+			return "Node [r=" + r + ", c=" + c + ", rowColDia=" + rowColDia + "]";
 		}
 	}
 
