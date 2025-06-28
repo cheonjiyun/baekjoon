@@ -227,7 +227,9 @@ public class Main {
     }
 
     public static void forceSpread(RowCol believer, RowCol target){
-        believe[target.row][target.col] = believe[believer.row][believer.col];
+        for(int i = 0; i < 3; i++){
+            believe[target.row][target.col][i] = believe[believer.row][believer.col][i];
+        }
     }
 
     public static void weakSpread(RowCol believer, RowCol target){
