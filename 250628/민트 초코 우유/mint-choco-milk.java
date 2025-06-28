@@ -66,7 +66,10 @@ public class Main {
              
             print(sb);
 
+            if(i != T-1){
+                 sb.append("\n");
 
+            }
 
             // for(int i = 0; i < N; i++){
             //     for(int j = 0; j < N; j++){
@@ -115,7 +118,6 @@ public class Main {
             }            
         }
         
-        sb.append("\n");
     }
 
     public static int calc(boolean[] foods){
