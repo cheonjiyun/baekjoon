@@ -227,7 +227,7 @@ public class Main {
     }
 
     public static void forceSpread(RowCol believer, RowCol target){
-        for(int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             believe[target.row][target.col][i] = believe[believer.row][believer.col][i];
         }
     }
