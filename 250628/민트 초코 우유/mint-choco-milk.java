@@ -47,24 +47,38 @@ public class Main {
             }
         }
 
-        morning();
-        lunch();
-        dinner();
-        print(sb);
+        for(int i = 0; i < T; i++){
+            morning();
+           
 
-        for(int i = 0; i < N; i++){
-            for(int j = 0; j < N; j++){
-                System.out.print(value[i][j] + " ");
-            }
-            System.out.println();
-        }
+            lunch();
+          
+            dinner();
+//             if(T == 1){
+//    System.out.println("[저녁]");
+//              for(int i = 0; i < N; i++){
+//                 for(int j = 0; j < N; j++){
+//                     System.out.print(value[i][j] + " ");
+//                 }
+//                 System.out.println();
+//             }
+//             }
+             
+            print(sb);
 
-        for(int i = 0; i < N; i++){
-            for(int j = 0; j < N; j++){
-                System.out.print(printFood(believe[i][j]) + " ");
-            }
-            System.out.println();
+
+
+            // for(int i = 0; i < N; i++){
+            //     for(int j = 0; j < N; j++){
+            //         System.out.print(printFood(believe[i][j]) + " ");
+            //     }
+            //     System.out.println();
+            // }
+            //     System.out.println();
         }
+       
+
+        
 
         System.out.println(sb);
     }
@@ -74,20 +88,20 @@ public class Main {
 
         for(int i = 0; i < N; i++){
             for(int j = 0; j < N; j++){
-                int calResult = calc(believe[i][j]);
-                if(calResult == 7){
+                String calResult = printFood(believe[i][j]);
+                if(calResult.equals("TCM")){
                     result[0] += value[i][j];
-                }else if(calResult == 6){
+                }else if(calResult.equals("TC")){
                     result[1] += value[i][j];
-                }else if(calResult == 5){
+                }else if(calResult.equals("TM")){
                     result[2] += value[i][j];
-                }else if(calResult == 3){
+                }else if(calResult.equals("CM")){
                     result[3] += value[i][j];
-                }else if(calResult == 1){
+                }else if(calResult.equals("M")){
                     result[4] += value[i][j];
-                }else if(calResult == 2){
+                }else if(calResult.equals("C")){
                     result[5] += value[i][j];
-                }else if(calResult == 4){
+                }else if(calResult.equals("T")){
                     result[6] += value[i][j];
                 }
             }
@@ -98,8 +112,9 @@ public class Main {
 
             if(i != 6){
                 sb.append(" ");
-            }
+            }            
         }
+        
         sb.append("\n");
     }
 
@@ -143,20 +158,28 @@ public class Main {
             for(int col = 0; col < N; col++){
                 if(!visited[row][col]){
                     bfs(row, col, visited);
-                    System.out.println();
                 }
             }
         }
     }
 
     public static void dinner(){
+        boolean[][] alreadySpread = new boolean[N][N];
+
         while(!representives.isEmpty()){
             Representive representative = representives.poll();
-            spread(representative);
+//  System.out.println(representative);
+            if(!alreadySpread[representative.row][representative.col]){
+                
+                spread(representative, alreadySpread);
+            }else{
+                
+//  System.out.println("통과");
+            }
         }
     }
     
-    public static void spread(Representive representative){
+    public static void spread(Representive representative, boolean[][] alreadySpread){
         int direction = representative.value % 4;
         int heart = representative.value - 1;
         value[representative.row][representative.col] = 1;
@@ -166,7 +189,7 @@ public class Main {
 
         RowCol believer = new RowCol(representative.row, representative.col);
 
-        // System.out.println("=== 전파자 " + believer + "==");
+        // System.out.println("=== 전파자 " + believer + "== heart: " + heart);
 
         while(!q.isEmpty() && heart > 0){
             RowCol cur = q.poll();
@@ -175,7 +198,7 @@ public class Main {
             int nextCol = cur.col + dc[direction];
             RowCol target = new RowCol(nextRow, nextCol);
             if(isWall(nextRow, nextCol)) break; // 벽이면 그만     
-            System.out.println(target);       
+            // System.out.println(target);       
 
             q.offer(new RowCol(nextRow, nextCol));
 
@@ -185,13 +208,13 @@ public class Main {
             alreadySpread[nextRow][nextCol] = true;
             if(heart > value[nextRow][nextCol]){
                 // 강한 전파
-                System.out.println("강한 전파");
+                // System.out.println("강한 전파");
                 forceSpread(believer, target);
                 heart -= value[nextRow][nextCol] + 1;
                 value[nextRow][nextCol] += 1;
             }else{
                 // 약한 전파
-                System.out.println("약한 전파");
+                // System.out.println("약한 전파");
                 weakSpread(believer, target);
 
                 value[nextRow][nextCol] += heart;
@@ -202,9 +225,7 @@ public class Main {
     }
 
     public static void forceSpread(RowCol believer, RowCol target){
-        for(int i = 0; i < 3; i++){
-            believe[target.row][target.col][i] = believe[believer.row][believer.col][i];
-        }
+        believe[target.row][target.col] = believe[believer.row][believer.col];
     }
 
     public static void weakSpread(RowCol believer, RowCol target){
@@ -223,7 +244,7 @@ public class Main {
         q.offer(new RowCol(startRow, startCol));
         visited[startRow][startCol] = true;
 
-        Representive representative = new Representive(startRow, startCol, value[startRow][startCol]);
+        Representive representative = new Representive(startRow, startCol, value[startRow][startCol], believe[startRow][startCol]);
         int sum = 0;        
 
         while(!q.isEmpty()){
@@ -232,11 +253,11 @@ public class Main {
 
             // 대표자            
             if(value[cur.row][cur.col] > representative.value){
-                representative = new Representive(cur.row, cur.col, value[cur.row][cur.col]);
+                representative = new Representive(cur.row, cur.col, value[cur.row][cur.col], believe[cur.row][cur.col]);
             }else if(value[cur.row][cur.col] == representative.value && cur.row < representative.row){
-                representative = new Representive(cur.row, cur.col, value[cur.row][cur.col]);
+                representative = new Representive(cur.row, cur.col, value[cur.row][cur.col], believe[cur.row][cur.col]);
             }else if(value[cur.row][cur.col] == representative.value && cur.row < representative.row && cur.col < representative.col){
-                representative = new Representive(cur.row, cur.col, value[cur.row][cur.col]);           
+                representative = new Representive(cur.row, cur.col, value[cur.row][cur.col], believe[cur.row][cur.col]);           
             }
 
             sum += 1; // 그룹 수
@@ -291,26 +312,56 @@ public class Main {
 
     public static class Representive extends RowCol implements Comparable<Representive>{
         int value;
+        boolean[] food;
 
-        public Representive(int row, int col, int value){
+        public Representive(int row, int col, int value,  boolean[] food){
             super(row, col);
             this.value = value;
+            this.food = food;
         }
 
-        public int compareTo(Representive o1){
-            if(o1.value == this.value && o1.row == this.row){
-                return this.col - o1.col;
-            }else if(o1.value == this.value && o1.row != this.row){                
-                return this.row - o1.row;
-            }else{
-                return o1.value - this.value;
+        public int compareTo(Representive o1) {
+
+
+            int p1 = this.getFoodPriority();
+            int p2 = o1.getFoodPriority();
+
+            if (p1 != p2) {
+                return Integer.compare(p1, p2); // 우선순위 낮은게 먼저
             }
-            
+            if (this.value != o1.value) {
+                return Integer.compare(o1.value, this.value); // 내림차순
+            }
+            if (this.row != o1.row) {
+                return Integer.compare(this.row, o1.row);     // 오름차순
+            }
+            return Integer.compare(this.col, o1.col);         // 오름차순
         }
 
         
         public String toString(){
             return "[Representive] " + row + " " + col + " " + value;
         }
+
+        
+    private int getFoodPriority() {
+    boolean f0 = food[0];
+    boolean f1 = food[1];
+    boolean f2 = food[2];
+
+    // 첫번째 조합
+    if (f0 && !f1 && !f2) return 1;
+    if (!f0 && f1 && !f2) return 2;
+    if (!f0 && !f1 && f2) return 3;
+    if (f0 && f1 && !f2) return 4;
+    if (f0 && !f1 && f2) return 5;
+    if (!f0 && f1 && f2) return 6;
+    if (f0 && f1 && f2) return 7;
+
+    // 그 외 (모두 false)라면 가장 낮은 우선순위 처리
+    return Integer.MAX_VALUE;
+}
+
     }
+
 }
