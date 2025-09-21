@@ -24,8 +24,6 @@ public class Main {
 
         String[] strOfDay = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
         
-        
-        
         System.out.println(strOfDay[days % 7]);
     }
 }
