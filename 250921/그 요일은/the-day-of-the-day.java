@@ -10,18 +10,19 @@ public class Main {
         int d2 = sc.nextInt();
         String A = sc.next();
         // Please write your code here.
-        strOfDay.put("Mon", 0);
-        strOfDay.put("Tue", 1);
-        strOfDay.put("Wed", 2);
-        strOfDay.put("Thu", 3);
-        strOfDay.put("Fri", 4);
-        strOfDay.put("Sat", 5);
-        strOfDay.put("Sun", 6);
+        strOfDay.put("Mon", 1);
+        strOfDay.put("Tue", 2);
+        strOfDay.put("Wed", 3);
+        strOfDay.put("Thu", 4);
+        strOfDay.put("Fri", 5);
+        strOfDay.put("Sat", 6);
+        strOfDay.put("Sun", 7);
 
         int diff = getDays(m2,d2) - getDays(m1,d1) + 1;
-
+        
 
         int result = diff / 7;
+        
 
         if(strOfDay.get(A) <= diff % 7){
             result++;
