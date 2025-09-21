@@ -19,6 +19,8 @@ public class Main {
         strOfDay.put("Sun", 6);
 
         int diff = getDays(m2,d2) - getDays(m1,d1) + 1;
+
+
         int result = diff / 7;
 
         if(strOfDay.get(A) <= diff % 7){
