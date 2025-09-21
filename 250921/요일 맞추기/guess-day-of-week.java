@@ -18,7 +18,14 @@ public class Main {
         days -= d1 - 1;
         days -= numOfDays[m2] - d2 + 1;
         
+        while(days < 0){
+            days += 7;
+        }
+
         String[] strOfDay = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-        System.out.println(strOfDay[((days % 7) + 7) % 7]);
+        
+        
+        
+        System.out.println(strOfDay[days % 7]);
     }
 }
