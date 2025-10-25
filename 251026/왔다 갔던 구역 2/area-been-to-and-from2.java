@@ -7,23 +7,33 @@ public class Main {
         int maxvalue = 100 * 10 * 2 + 1;
         int[] arr = new int[maxvalue];
 
+        int[] x1 = new int[N];
+        int[] x2 = new int[N];
+
         int current = 1000;
         for (int i = 0; i < N; i++) {
             int x = sc.nextInt();
             char dir = sc.next().charAt(0);
-
-            for(int j = 0; j < x; j++){
-                
-                arr[current] += 1;
-                
-                if(dir == 'L'){
-                    current--;
-                }else if(dir == 'R'){
-                    current++;
-                }
-                
+            
+            if(dir == 'L'){
+                x1[i] = current - x;
+                x2[i] = current;
+                current -= x;
+            }else if(dir == 'R'){
+                x1[i] = current;
+                x2[i] = current + x;
+                current += x;
             }
             // Please write your code here.
+        }
+
+        for(int i = 0; i < N ;i++){
+            //System.out.println((x1[i] - 1000) + " " + (x2[i] - 1000));
+            for(int j = x1[i]; j < x2[i]; j++){
+                arr[j] += 1;
+                
+            }
+            
         }
 
         int cnt = 0;
