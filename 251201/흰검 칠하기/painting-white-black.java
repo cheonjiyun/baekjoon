@@ -5,7 +5,8 @@ public class Main {
     static int maxNumber = 0 + 1000 * 100;
     static int curNumber = 0 + 1000 * 100;
 
-    static int[] arrCount = new int[1000 * 100 * 2 + 1];
+    static int[] arrCountWhite = new int[1000 * 100 * 2 + 1];
+    static int[] arrCountBlack = new int[1000 * 100 * 2 + 1];
     static int[] arrColor = new int[1000 * 100 * 2 + 1]; // 0: 일반, 1: 검정, -1: 하양, 2: 회색
 
     public static void main(String[] args) {
@@ -55,13 +56,14 @@ public class Main {
         // 현재 칠하기
         if(d == 'L'){
             arrColor[curNumber] = -1;
+            arrCountWhite[curNumber] += 1;
         }else if(d == 'R'){
             arrColor[curNumber] = 1;
+            arrCountBlack[curNumber] += 1;
         }
-        arrCount[curNumber] += 1;
 
         // 4번 이상은 회색
-        if(arrCount[curNumber] >= 4){
+        if(arrCountWhite[curNumber] >= 2 && arrCountBlack[curNumber] >= 2){
             arrColor[curNumber] = 2;
         }
     }
