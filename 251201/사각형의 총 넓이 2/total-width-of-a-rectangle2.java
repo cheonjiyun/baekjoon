@@ -8,7 +8,7 @@ public class Main {
         int[] x2 = new int[n];
         int[] y2 = new int[n];
 
-        int[][] arr = new int[200][200];
+        int[][] arr = new int[201][201];
         for (int i = 0; i < n; i++) {
             x1[i] = sc.nextInt();
             y1[i] = sc.nextInt();
@@ -26,8 +26,8 @@ public class Main {
 
         }
         int count = 0;
-        for(int x = 0; x < 200; x++){
-            for(int y = 0; y < 200; y++){
+        for(int x = 0; x < 201; x++){
+            for(int y = 0; y < 201; y++){
                 if(arr[x][y] == 1){
                     count++;
                 }
