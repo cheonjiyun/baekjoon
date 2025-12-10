@@ -59,7 +59,7 @@ public class Main {
         }
 
     }
-    static int max_val = 1_000_000_000;
+    static int max_val = 100 *1000 * 10;
 
     static class Edge{
         int destIdx;
