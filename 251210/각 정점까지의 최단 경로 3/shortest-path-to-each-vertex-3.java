@@ -31,7 +31,7 @@ public class Main {
         Queue<Element> pq = new PriorityQueue<Element>();
         int[] dists = new int[n];
         for(int i = 0; i < n; i++){
-            dists[i] = 1_000_000_000;
+            dists[i] = max_val;
         }
 
         dists[startIdx] = 0;
@@ -55,9 +55,11 @@ public class Main {
         }
         
         for(int i = 1; i < n; i++){
-            System.out.println(dists[i]);
+            System.out.println(dists[i] == max_val ? -1 : dists[i]);
         }
+
     }
+    static int max_val = 1_000_000_000;
 
     static class Edge{
         int destIdx;
