@@ -6,10 +6,10 @@ public class Main {
         int[] x = new int[n];
         int[] y = new int[n];
 
-        boolean[][] arr = new boolean[101][101];
+        boolean[][] arr = new boolean[201][201];
         for (int i = 0; i < n; i++) {
-            x[i] = sc.nextInt();
-            y[i] = sc.nextInt();
+            x[i] = sc.nextInt() + 100;
+            y[i] = sc.nextInt() + 100;
 
             for(int col = x[i]; col < x[i] + 8; col++){
                 for(int row = y[i]; row < y[i] + 8; row++){
@@ -19,8 +19,8 @@ public class Main {
         }
 
         int count = 0;
-        for(int i = 0; i < 101; i++){
-            for(int j = 0; j < 101; j++){
+        for(int i = 0; i < 201; i++){
+            for(int j = 0; j < 201; j++){
                 if(arr[i][j])
                     count++;
             }
