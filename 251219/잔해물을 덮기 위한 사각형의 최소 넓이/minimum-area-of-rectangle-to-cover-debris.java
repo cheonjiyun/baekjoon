@@ -46,6 +46,9 @@ public class Main {
         }
 
         int result = (max_x - min_x + 1) * (max_y - min_y + 1);
+        if(min_x == n && max_x == 0 && min_y == n && max_y == 0){
+            result = 0;
+        }
         System.out.println(result);
     }
 }
