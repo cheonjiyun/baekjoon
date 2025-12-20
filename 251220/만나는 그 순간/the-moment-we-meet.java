@@ -6,11 +6,12 @@ public class Main {
         int n = sc.nextInt();
         int m = sc.nextInt();
 
-        int[] arrN = new int[1000 * 1000];
-        int[] arrM = new int[1000 * 1000];
+        int[] arrN = new int[1000 * 1000 + 1];
+        int[] arrM = new int[1000 * 1000 + 1];
 
         int time = 0;
         int currentLoc = 0;
+        int maxTime = 0;
 
         for(int i = 0; i < n; i++){
             char d = sc.next().charAt(0);
@@ -19,6 +20,7 @@ public class Main {
 
             for(int j = 0; j < t; j++){
                 time++;
+                maxTime = Math.max(maxTime, time);
                 if(d == 'L'){
                     currentLoc--;
                 }else if(d == 'R'){
@@ -28,7 +30,7 @@ public class Main {
             }
         }
         for(int i = time +1; i <= 1000 * 1000;i++){
-            arrN[time] = currentLoc;
+            arrN[i] = currentLoc;
         }
 
         time = 0;
@@ -39,6 +41,7 @@ public class Main {
 
             for(int j = 0; j < t; j++){
                 time++;
+                maxTime = Math.max(maxTime, time);
                 if(d == 'L'){
                     currentLoc--;
                 }else if(d == 'R'){
@@ -48,10 +51,10 @@ public class Main {
             }
         }
         for(int i = time +1; i <= 1000 * 1000;i++){
-            arrM[time] = currentLoc;
+            arrM[i] = currentLoc;
         }
 
-        for(int i = 1; i < 1000 * 1000; i++){
+        for(int i = 1; i <= maxTime; i++){
            // System.out.println(arrN[i] + " " + arrM[i]);
             if(arrN[i] == arrM[i]){
                 System.out.println(i);
