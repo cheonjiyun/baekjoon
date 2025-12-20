@@ -18,10 +18,8 @@ public class Main {
 
             if(arr[i] <= t){
                 count = 0;
-            }else if(i >= 1 && (arr[i-1] < arr[i])){
-                count++;
             }else{
-                count = 1;
+                count++;
             }
 
             // System.out.println(count);
