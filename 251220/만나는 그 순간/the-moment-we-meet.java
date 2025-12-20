@@ -48,7 +48,7 @@ public class Main {
             }
         }
         for(int i = time +1; i <= Math.max(n,m);i++){
-            arrN[time] = currentLoc;
+            arrM[time] = currentLoc;
         }
 
         for(int i = 1; i < 1000 * 1000; i++){
