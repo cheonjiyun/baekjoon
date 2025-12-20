@@ -16,10 +16,10 @@ public class Main {
         for (int i = 0; i < n; i++){
             arr[i] = sc.nextInt();
 
-            if(i >= 1 && (arr[i-1] < arr[i])){
-                count++;
-            }else if(arr[i] < t){
+            if(arr[i] <= t){
                 count = 0;
+            }else if(i >= 1 && (arr[i-1] < arr[i])){
+                count++;
             }else{
                 count = 1;
             }
