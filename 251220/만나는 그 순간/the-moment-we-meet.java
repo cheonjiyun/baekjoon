@@ -27,7 +27,7 @@ public class Main {
                 arrN[time] = currentLoc; 
             }
         }
-        for(int i = time +1; i <= Math.max(n,m);i++){
+        for(int i = time +1; i <= 1000 * 1000;i++){
             arrN[time] = currentLoc;
         }
 
@@ -47,7 +47,7 @@ public class Main {
                 arrM[time] = currentLoc; 
             }
         }
-        for(int i = time +1; i <= Math.max(n,m);i++){
+        for(int i = time +1; i <= 1000 * 1000;i++){
             arrM[time] = currentLoc;
         }
 
