@@ -17,6 +17,8 @@ public class Main {
                 return;
             }
         }
+
+        System.out.println(-1);
         // Please write your code here.
     }
 }
