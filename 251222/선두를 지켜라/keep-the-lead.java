@@ -34,15 +34,30 @@ public class Main {
         }
 
         int result = 0;
+        int last = 0;
         for(int i = 1; i <= time; i++){
-            boolean last = locationA[i-1] > locationB[i-1];
-            boolean cur = locationA[i] > locationB[i];
+            int cur = biggerAB(locationA[i], locationB[i]);
 
-            if(last != cur){
+            if((last == 1 && cur == 2) || (last == 2 && cur == 1)){
                 result++;
+            }
+
+            if(cur != 3){
+                last = cur;
             }
         }
 
         System.out.println(result);
+    }
+
+    // A; 1  B: 2
+    static int biggerAB(int a, int b){
+        if(a > b){
+            return 1;
+        }else if(a < b){
+            return 2;
+        }else{
+            return 3;
+        }
     }
 }
