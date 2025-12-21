@@ -46,20 +46,18 @@ public class Main {
         }
 
         for(int i = timeA + 1; i <= maxTime; i++){
-            System.out.print(location[0][i] + " ");
+            location[0][i] = location[0][i-1];
         }
-        System.out.println();
-        for(int i = 1; i <= maxTime; i++){
-            System.out.print(location[1][i] + " ");
+        for(int i = timeB; i <= maxTime; i++){
+            location[1][i] = location[1][i-1];
         }
-        System.out.println();
         
         boolean together = true;
         int count = 0;
         for(int i = 1; i <= maxTime; i++){
             
             if(!together && location[0][i] == location[1][i]){
-                System.out.println(i);
+          
                 count++;
             }
             if(location[0][i] == location[1][i]){
