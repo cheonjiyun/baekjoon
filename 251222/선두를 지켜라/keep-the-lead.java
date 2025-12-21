@@ -33,17 +33,16 @@ public class Main {
             }
         }
 
-        boolean isFrontA = locationA[1] > locationB[1];
-        int result = locationA[1] == locationB[1] ? 0 : 1;
-        for(int i = 0; i < time; i++){
-            if(locationA[i] > locationB[i] && !isFrontA){
-                result++;
-            }else if(locationA[i] < locationB[i] && isFrontA){
+        int result = 0;
+        for(int i = 1; i <= time; i++){
+            boolean last = locationA[i-1] > locationB[i-1];
+            boolean cur = locationA[i] > locationB[i];
+
+            if(last != cur){
                 result++;
             }
         }
 
         System.out.println(result);
-        // Please write your code here.
     }
 }
