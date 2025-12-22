@@ -24,19 +24,32 @@ public class Main {
         Collections.sort(infos);
 
         for(Node info : infos){
+            boolean goY = false;
             if(influ[info.x] == 1 && chance[info.x] < k){
-                chance[info.x] += 1;
-                influ[info.y] = 1;
+                goY = true;
             }
+            boolean goX = false;
             if(influ[info.y] == 1 && chance[info.y] < k){
+                goX = true;
+            }
+            if(goX){
                 chance[info.y] += 1;
                 influ[info.x] = 1;
+
+            }
+            if(goY){
+                chance[info.x] += 1;
+                influ[info.y] = 1;
+
             }
         }
         
         for(int i = 1 ; i <= n; i++){
             System.out.print(influ[i]);
         }
+        // for(int i = 1 ; i <= n; i++){
+        //     System.out.print(chance[i]);
+        // }
         // Please write your code here.
     }
 
