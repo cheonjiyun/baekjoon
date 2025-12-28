@@ -41,21 +41,19 @@ public class Main {
         while(isRange(startRow, startCol)){
             result++;
 
-           // System.out.println(startRow + " " + startCol + " " + dir);
+         //   System.out.println(startRow + " " + startCol + " " + dir);
 
             dir = nextDir(grid[startRow][startCol], dir);
             int nrow = startRow + dr[dir];
             int ncol = startCol + dc[dir];
             startRow = nrow;
             startCol = ncol;
-            //  System.out.println(startRow + " " + startCol + " " + dir);
-  //System.out.println();
+   //          System.out.println(startRow + " " + startCol + " " + dir);
+ // System.out.println();
 
         }
 
         System.out.println(result);
-        
-        // Please write your code here.
     }
 
     static boolean isRange(int r, int c){
@@ -67,11 +65,11 @@ public class Main {
             if(dir == 0){
                 return 1;
             }else if(dir == 1){
-                return 2;
+                return 0;
             }else if(dir == 2){
                 return 3;
             }else{
-                return 0;
+                return 2;
             }
         }else{
             if(dir == 0){
