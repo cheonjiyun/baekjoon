@@ -1,32 +1,55 @@
 class Solution {
+    int m;
+    int n;
+    int[][] arr;
+    
+    int div = 1_000_000_007;
+    
     public int solution(int m, int n, int[][] puddles) {
-        int answer = 0;
+        this.m = m;
+        this.n = n;
         
+        arr = new int[n][m];
+        arr[0][0]=1;
         
-        int[][] count = new int[n][m];
-        count[0][0] = 1;
+        for(int[] puddle :puddles){
+            int c = puddle[0] - 1;
+            int r = puddle[1] - 1;
+            
+            arr[r][c] = -1;
+        }
+        
         for(int r = 0; r < n; r++){
             for(int c = 0; c < m; c++){
-                if(isPuddle(r, c, puddles)) continue;
-                
-                if(r-1 >= 0){
-                    count[r][c] = (count[r][c] + count[r-1][c]) % 1000000007;
-                }if(c-1>=0){
-                    count[r][c] = (count[r][c] + count[r][c-1]) % 1000000007;
+                if(arr[r][c] == -1){
+                    continue;
                 }
+                
+                int top = getValue(r-1,c);
+                int left = getValue(r,c-1);
+            
+                
+                arr[r][c] += ((top % div) + (left % div)) % div;
             }
         }
+//          for(int r = 0; r < n; r++){
+//             for(int c = 0; c < m; c++){
+//                 System.out.print(arr[r][c] +" ");
+//             }
+//             System.out.println();
+//         }
         
-        return count[n-1][m-1] % 1000000007;
+        return arr[n-1][m-1];
     }
     
-    public boolean isPuddle(int r, int c, int[][] puddles){
-        for(int i = 0; i < puddles.length; i++){
-            int[] puddle = puddles[i];
-            if(puddle[0] -1 == c && puddle[1] -1 == r){
-                return true;
-            }
+    public int getValue(int r, int c){
+        
+        if(r < 0 || c < 0 || r >= n || c >= m){
+            return 0;
         }
-        return false;
+        if(arr[r][c] == -1){
+            return 0;
+        }
+        return arr[r][c];
     }
 }
